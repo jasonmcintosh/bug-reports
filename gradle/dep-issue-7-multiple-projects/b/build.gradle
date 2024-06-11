@@ -1,0 +1,17 @@
+apply plugin: "java"
+
+dependencies {
+  implementation ("com.google.apis:google-api-services-compute")
+/*
+  implementation ("com.google.apis:google-api-services-compute") {
+    version {
+      strictly("beta-rev20201102-1.30.10")
+    }
+    because "MUST use this version due to an API conflict"
+  }
+*/
+}
+
+configurations.all {
+   resolutionStrategy.force 'com.google.apis:google-api-services-compute:beta-rev20201102-1.30.10'
+}
