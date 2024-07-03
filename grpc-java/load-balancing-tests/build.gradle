@@ -1,0 +1,12 @@
+plugins {
+  id "java" 
+}
+
+
+// WORK IN PROGRESS
+allprojects {
+    repositories {
+      mavenCentral()
+    }
+
+}
