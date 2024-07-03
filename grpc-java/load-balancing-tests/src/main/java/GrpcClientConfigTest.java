@@ -46,11 +46,13 @@ public class GrpcClientConfigTest  {
     public void sayHello(GrpcClientRequest request, StreamObserver<GrpcClientResponse> responseObserver) {
       if (shouldFail) {
         responseObserver.onError(Status.UNAVAILABLE.withDescription("We are a failing server").asRuntimeException());
+      }else {
+        responseObserver.onNext(GrpcClientResponse.newBuilder()
+                .setMessage("hello '" + request.getName() + "' from the server " + serverNumber + "!")
+                .build());
+        responseObserver.onCompleted();
+
       }
-      responseObserver.onNext(GrpcClientResponse.newBuilder()
-                                  .setMessage("hello '" + request.getName() + "' from the server " + serverNumber + "!")
-                                  .build());
-      responseObserver.onCompleted();
     }
   }
 
