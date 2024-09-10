@@ -7,7 +7,7 @@ io.grpc.StatusRuntimeException: UNAVAILABLE: io exception
 	at io.grpc.stub.ClientCalls.toStatusRuntimeException(ClientCalls.java:268)
 	at io.grpc.stub.ClientCalls.getUnchecked(ClientCalls.java:249)
 	at io.grpc.stub.ClientCalls.blockingUnaryCall(ClientCalls.java:167)
-	at io.harness.pms.contracts.service.OutcomeProtoServiceGrpc$OutcomeProtoServiceBlockingStub.resolveOptional(OutcomeProtoServiceGrpc.java:456)
+...
 	at net.jodah.failsafe.FailsafeExecutor.call(FailsafeExecutor.java:379)
 	at net.jodah.failsafe.FailsafeExecutor.get(FailsafeExecutor.java:70)
 .....
