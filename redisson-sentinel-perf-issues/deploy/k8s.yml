@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-test-service
+  labels:
+    app: redis-test-service
+    type: spring-boot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-test-service
+  template:
+    metadata:
+      labels:
+        type: spring-boot-app
+        app: redis-test-service
+    spec:
+      containers:
+        - name: redis-test-service
+          image: docker.io/mcintoshj/redis-test-service:0.0.5-SNAPSHOT-amd
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 5
+          volumeMounts:
+          - mountPath: /opt/application/config/
+            name: test-service-config
+      volumes:
+        - name: test-service-config
+          configMap:
+            name: test-service
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-service
+data:
+  application.yaml: |
+    redis:
+      checker:
+        driver: redisson
+    spring:
+      data:
+        redis:
+          sentinel:
+            master: harness-redis
+            nodes:
+            - redis-sentinel-harness-announce-0:26379
+            - redis-sentinel-harness-announce-1:26379
+            - redis-sentinel-harness-announce-2:26379
+        redisson:
+          config: |
+            clusterServersConfig:
+              idleConnectionTimeout: 10000
+              connectTimeout: 10000
+              timeout: 3000
+              retryAttempts: 3
+              retryInterval: 1500
+              failedSlaveReconnectionInterval: 3000
+              failedSlaveCheckInterval: 60000
+              password: null
+              subscriptionsPerConnection: 5
+              clientName: null
+              loadBalancer: !<org.redisson.connection.balancer.RoundRobinLoadBalancer> {}
+              subscriptionConnectionMinimumIdleSize: 1
+              subscriptionConnectionPoolSize: 50
+              slaveConnectionMinimumIdleSize: 24
+              slaveConnectionPoolSize: 64
+              masterConnectionMinimumIdleSize: 24
+              masterConnectionPoolSize: 64
+              readMode: "SLAVE"
+              subscriptionMode: "SLAVE"
+              nodeAddresses:
+              - "redis://127.0.0.1:7004"
+              - "redis://127.0.0.1:7001"
+              - "redis://127.0.0.1:7000"
+              scanInterval: 1000
+              pingConnectionInterval: 0
+              keepAlive: false
+              tcpNoDelay: false
+            threads: 16
+            nettyThreads: 32
+            codec: !<org.redisson.codec.Kryo5Codec> {}
+            transportMode: "NIO"

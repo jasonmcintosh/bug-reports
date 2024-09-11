@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id "io.github.itzg.simple-boot-image" version "3.2.1"
+
+}
+ext {
+    arch = System.getProperty("arch", "arm")
+}
+group = 'io.harness.redis.tester'
+version = "0.0.6-SNAPSHOT-${arch}"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.redisson:redisson:3.35.0')
+    implementation('org.redisson:redisson-spring-boot-starter:3.35.0')
+    implementation("io.lettuce:lettuce-core")
+    implementation('io.micrometer:micrometer-registry-prometheus:+')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-redis'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+simpleBootImage {
+    imageRepo = "docker.io/mcintoshj"
+    platforms = ["linux/${arch}64"]
+    push = true
+}
