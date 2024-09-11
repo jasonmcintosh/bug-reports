@@ -40,7 +40,7 @@ public class RedisHealthChecker extends AbstractHealthIndicator {
     private final int timeoutSeconds;
 
     @Autowired
-    public RedisHealthChecker(RedissonClient client, MeterRegistry meterRegistry, @Value("${redis.checker.timeoutSeconds:1}") int timeoutSeconds) {
+    public RedisHealthChecker(RedissonClient client, MeterRegistry meterRegistry, @Value("${redis.checker.timeoutSeconds:0}") int timeoutSeconds) {
         this.client = client;
         this.meterRegistry = meterRegistry;
         this.timeoutSeconds = timeoutSeconds;
