@@ -54,14 +54,7 @@ data:
       checker:
         driver: redisson
     spring:
-      data:
-        redis:
-          sentinel:
-            master: harness-redis
-            nodes:
-            - redis-sentinel-harness-announce-0:26379
-            - redis-sentinel-harness-announce-1:26379
-            - redis-sentinel-harness-announce-2:26379
+      redis:
         redisson:
           config: |
             sentinelServersConfig:
@@ -93,3 +86,11 @@ data:
             nettyThreads: 32
             codec: !<org.redisson.codec.Kryo5Codec> {}
             transportMode: "NIO"
+      data:
+        redis:
+          sentinel:
+            master: harness-redis
+            nodes:
+            - redis-sentinel-harness-announce-0:26379
+            - redis-sentinel-harness-announce-1:26379
+            - redis-sentinel-harness-announce-2:26379
